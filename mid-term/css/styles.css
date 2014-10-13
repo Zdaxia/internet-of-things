@@ -1,0 +1,44 @@
+body {
+  background: #24aecd;
+}
+
+
+
+@media (min-width: 600px) {
+ 	#wrapper{
+		margin: 0 auto;
+		width: 70%;
+	}
+}
+
+.fish {
+  width: 150px;
+  height: 77px;
+  margin: 2% auto;
+  margin-left: 20px;
+  background: url('../img/03.png') left center;
+
+  animation: play 0.5s steps(2) infinite;
+  -webkit-animation: play 0.5s steps(2) infinite;
+  -moz-animation: play 0.5s steps(2) infinite;
+
+  float: left;
+}
+
+.title{
+	text-align: center;
+	color: #ffffff;
+	font-size: 40px;
+	font-family: 'Open Sans', sans-serif;
+
+}
+
+@keyframes play {
+	100% { background-position: -1000px; }
+}
+@-webkit-keyframes play {
+    100% { background-position: -300px; }
+} 
+@-moz-keyframes play {
+    100% { background-position: -1000px; }
+} 
