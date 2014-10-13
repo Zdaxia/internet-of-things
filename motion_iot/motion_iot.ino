@@ -28,7 +28,6 @@ void setup() {
 
   Console.println("data.sparkfun client");
   
-  Serial.begin(9600); 
   pinMode(pirPin, INPUT);
 
   // Do a first update immediately
