@@ -33,6 +33,10 @@ body {
 
 }
 
+.fishContiner{
+  margin: 0 auto;
+}
+
 @keyframes play {
 	100% { background-position: -1000px; }
 }
