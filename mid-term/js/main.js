@@ -1,8 +1,8 @@
 (function() {
 
-	xively.setKey("Db0azaSMVCmuajrtVk9IzytbqNVreX29ou8HbeHSZ3L0D0Ox");
+	xively.setKey("[YOUR-KEY]");
 
-	var feedID = 196923667, // Feed ID  
+	var feedID = [YOUR-ID], // Feed ID  
 		datastreamID1 = "meal"; // Datastream ID  
 	var fishIhadToday = 0;
 	// selector = "#myelement"; // Your element on the page  
