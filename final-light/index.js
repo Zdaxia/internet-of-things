@@ -17,7 +17,8 @@ var sunRiseHour,
 	sunRiseMin,
 	sunSetHour,
 	sunSetMin,
-	dateInUsing=0
+	dateInUsing = 0,
+	sleepHours = 8
 
 // Create Client
 var wunder = new WunderNodeClient(apikey, debug,  10, 'minute')
@@ -49,7 +50,6 @@ var GetSunData = function(){
 
 			console.log(('sunrise- '+sunRiseHour+':'+sunRiseMin).green)
 			console.log(('sunset- '+sunSetHour+':'+sunSetMin).green)
-
             
     })
 }
@@ -62,10 +62,22 @@ var setIntervalInSever = function(){
 			currentMin = date.getMinutes(),
 			currentDate = date.getDate()
 
-			if (dateInUsing!=currentDate) {
+			if (dateInUsing != currentDate) {
 				// which means that it's a new day, then we update the sun data
 				GetSunData()
-				dateInUsing=currentDate
+				dateInUsing = currentDate
+			}
+
+			if (currentHour == sunRiseHour &&  currentMin == sunRiseMin) {
+				//make the alarm work
+			}
+
+			if (currentHour == sunSetHour &&  currentMin == sunSetMin) {
+				// light up
+			}
+
+			if (currentHour == (sunRiseHour-8+12) &&  currentMin == sunRiseMin) {
+				// blink
 			}
 
 			// console.log((currentDate+':'+currentHour+':'+currentMin).red)
@@ -73,13 +85,7 @@ var setIntervalInSever = function(){
 }
 
 var init = function(){
-
 	setIntervalInSever()
-	// GetSunData()
-	
-	
-
-
 }
 
 init()
