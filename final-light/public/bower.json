@@ -1,0 +1,20 @@
+{
+  "name": "mongodb-as",
+  "version": "0.0.1",
+  "homepage": "https://github.com/Zdaxia/internet-of-things",
+  "authors": [
+    "Zdaxia <zouziqu@gmail.com>"
+  ],
+  "main": "index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1"
+  }
+}
