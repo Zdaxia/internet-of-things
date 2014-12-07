@@ -9,7 +9,7 @@ var express = require('express'),
 	WunderNodeClient = require("wundernode"),
 	URL = require('url')
 
-var apikey = "dd72459b64310aa3"
+var apikey = "YOUR-KEY"
 
 var debug = false
 
