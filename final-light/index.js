@@ -7,18 +7,21 @@ var express = require('express'),
 	http = require('http'),
 	port = 8888,
 	WunderNodeClient = require("wundernode"),
-	URL = require('url')
+	URL = require('url'),
+	net = require('net')
 
-var apikey = "YOUR-KEY"
+var apikey = "YOUR_KEY"
 
 var debug = false
 
 var sunRiseHour,
-	sunRiseMin,
+	sunRiseMin, 
 	sunSetHour,
 	sunSetMin,
 	dateInUsing = 0,
 	sleepHours = 8
+
+var netsocketConnections = []
 
 // Create Client
 var wunder = new WunderNodeClient(apikey, debug,  10, 'minute')
@@ -26,12 +29,52 @@ var wunder = new WunderNodeClient(apikey, debug,  10, 'minute')
 
 app.use(express.static(__dirname + '/public'))
 
-http.createServer(app).listen(port, function() {
-	console.log(('Server running on port' + port).yellow)
+
+var server = http.createServer(app).listen(port, function(){
+  console.log(('Server running on port' + port).yellow)
 })
+
 
 app.get('/', function(req, res) {
         res.end('Hello from wundernode!')
+})
+
+var io = require('socket.io')(server)
+io.on('connection', function(socket){
+	socket.on('sunset', function(){
+		console.log('hey it is night now')
+	})
+
+	socket.on('blink', function(){
+		console.log('hey go to bed now')
+		for(var i=0; i<netsocketConnections.length; i++){
+	      			//emit to all of our netsocket (arduino) connections!
+	      			netsocketConnections[i].write('2');
+    	}
+
+	})
+
+	socket.on('sunrise', function(){	
+		console.log('hey get up')
+	})
+})
+
+
+var EventEmitter = require("events").EventEmitter
+var netSocketEmitter = new EventEmitter()
+var netsocketServer = net.createServer( function (netsocket){
+
+  netsocketConnections.push(netsocket) //stick into our global array
+  console.log("new netsocket server connection made".green)
+  
+  netsocket.on('end', function(){
+    netsocketConnections = [] //empty the array, everyone will get added back on their next connection
+    console.log("netsocket disconnected".red)
+  })
+})
+
+netsocketServer.listen(5000, function(){
+  console.log("netsocket server listening on port 5000".cyan)
 })
 
 var GetSunData = function(){
@@ -70,18 +113,37 @@ var setIntervalInSever = function(){
 
 			if (currentHour == sunRiseHour &&  currentMin == sunRiseMin) {
 				//make the alarm work
+				for(var i=0; i<netsocketConnections.length; i++){
+	      			//emit to all of our netsocket (arduino) connections!
+	      			netsocketConnections[i].write('1');
+    			}
 			}
 
 			if (currentHour == sunSetHour &&  currentMin == sunSetMin) {
 				// light up
+				for(var i=0; i<netsocketConnections.length; i++){
+	      			//emit to all of our netsocket (arduino) connections!
+	      			netsocketConnections[i].write('2');
+	    		}
 			}
 
 			if (currentHour == (sunRiseHour-8+12) &&  currentMin == sunRiseMin) {
 				// blink
+				for(var i=0; i<netsocketConnections.length; i++){
+	      			//emit to all of our netsocket (arduino) connections!
+	      			netsocketConnections[i].write('1');
+    			}
 			}
 
 			// console.log((currentDate+':'+currentHour+':'+currentMin).red)
+			
 	},1000)
+}
+
+
+var inputGetupData = function(){
+	var getupTime = new Date().getTime()
+	//put this timestamp to db
 }
 
 var init = function(){

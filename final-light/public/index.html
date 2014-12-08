@@ -1,9 +1,39 @@
-<!DOCTYPE html>
 <html>
-	<head>
+<head>
+	<title>My Site</title>
+	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+
+</head>
+<body>
+	<button class="click1"> sunset </button>
+	<button class="click2"> blink</button>
+	<button class="click3"> sunrise </button>
+
+	<script>
+		var socket = io();
+
+		// Whenever the server emits 'typing', show the typing messag
+
+
+		$( ".click1").click(function(event){
+			console.log('sunset');
+			socket.emit('sunset');
+		})
+
+		$( ".click2").click(function(event){
+			console.log('blink');
+			socket.emit('blink');
+		})
+
+		$( ".click3").click(function(event){
+			console.log('sunrise');
+			socket.emit('sunrise');
+		})
+
 		
-	</head>
-	<body>
-		Hi!! I'm empty not.
-	</body>
+
+	</script>
+
+</body>
 </html>
