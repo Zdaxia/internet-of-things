@@ -8,9 +8,11 @@ var express = require('express'),
 	port = 8888,
 	WunderNodeClient = require("wundernode"),
 	URL = require('url'),
-	net = require('net')
+	net = require('net'),
+	Firebase = require('firebase'),
+	myDbRoot = new Firebase('https://zziotclock.firebaseio.com/')
 
-var apikey = "YOUR_KEY"
+var apikey = "dd72459b64310aa3"
 
 var debug = false
 
@@ -36,13 +38,22 @@ var server = http.createServer(app).listen(port, function(){
 
 
 app.get('/', function(req, res) {
-        res.end('Hello from wundernode!')
+        
+})
+
+app.get('/demo', function(req, res){
+
+	res.sendfile('public/demo.html');
 })
 
 var io = require('socket.io')(server)
 io.on('connection', function(socket){
 	socket.on('sunset', function(){
 		console.log('hey it is night now')
+		for(var i=0; i<netsocketConnections.length; i++){
+	      			//emit to all of our netsocket (arduino) connections!
+	      			netsocketConnections[i].write('1');
+    	}
 	})
 
 	socket.on('blink', function(){
@@ -56,6 +67,27 @@ io.on('connection', function(socket){
 
 	socket.on('sunrise', function(){	
 		console.log('hey get up')
+		for(var i=0; i<netsocketConnections.length; i++){
+	      			//emit to all of our netsocket (arduino) connections!
+	      			netsocketConnections[i].write('3');
+    	}
+	})
+
+	socket.on('getup', function(){
+		console.log('OK I will get up now')
+		for(var i=0; i<netsocketConnections.length; i++){
+	      			//emit to all of our netsocket (arduino) connections!
+	      			netsocketConnections[i].write('0');
+    	}
+		inputGetupData()
+	})
+
+	socket.on('sleep', function(){	
+		console.log('sleep')
+		for(var i=0; i<netsocketConnections.length; i++){
+	      			//emit to all of our netsocket (arduino) connections!
+	      			netsocketConnections[i].write('0');
+    	}
 	})
 })
 
@@ -115,7 +147,7 @@ var setIntervalInSever = function(){
 				//make the alarm work
 				for(var i=0; i<netsocketConnections.length; i++){
 	      			//emit to all of our netsocket (arduino) connections!
-	      			netsocketConnections[i].write('1');
+	      			netsocketConnections[i].write('3');
     			}
 			}
 
@@ -123,7 +155,7 @@ var setIntervalInSever = function(){
 				// light up
 				for(var i=0; i<netsocketConnections.length; i++){
 	      			//emit to all of our netsocket (arduino) connections!
-	      			netsocketConnections[i].write('2');
+	      			netsocketConnections[i].write('1');
 	    		}
 			}
 
@@ -131,7 +163,7 @@ var setIntervalInSever = function(){
 				// blink
 				for(var i=0; i<netsocketConnections.length; i++){
 	      			//emit to all of our netsocket (arduino) connections!
-	      			netsocketConnections[i].write('1');
+	      			netsocketConnections[i].write('2');
     			}
 			}
 
@@ -143,7 +175,18 @@ var setIntervalInSever = function(){
 
 var inputGetupData = function(){
 	var getupTime = new Date().getTime()
+	date = new Date(getupTime)
 	//put this timestamp to db
+	var datevalues = [
+		date.getFullYear(),
+   		date.getMonth()+1,
+		date.getDate(),
+		date.getHours(),
+		date.getMinutes(),
+		date.getSeconds(),
+	]
+	console.log(datevalues)
+	myDbRoot.push({time:getupTime})
 }
 
 var init = function(){

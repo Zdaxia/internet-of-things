@@ -8,8 +8,12 @@
 <body>
 	<button class="click1"> sunset </button>
 	<button class="click2"> blink</button>
+	<button class="click5"> sleep </button>
+	<br>
+	<br>
 	<button class="click3"> sunrise </button>
 	<button class="click4"> getup </button>
+	
 
 	<script>
 		var socket = io();
@@ -36,6 +40,12 @@
 			console.log('getup');
 			socket.emit('getup');
 		})
+
+		$( ".click5").click(function(event){
+			console.log('sleep');
+			socket.emit('sleep');
+		})
+
 
 		
 
